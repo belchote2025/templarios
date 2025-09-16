@@ -1,0 +1,25 @@
+# Allow access to media files
+<FilesMatch "\.(jpg|jpeg|png|gif|mp4|avi|mov|webm)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# Set proper MIME types
+AddType image/jpeg .jpg .jpeg
+AddType image/png .png
+AddType image/gif .gif
+AddType video/mp4 .mp4
+AddType video/avi .avi
+AddType video/quicktime .mov
+AddType video/webm .webm
+
+# Enable CORS for media files
+<IfModule mod_headers.c>
+    <FilesMatch "\.(jpg|jpeg|png|gif|mp4|avi|mov|webm)$">
+        Header set Access-Control-Allow-Origin "*"
+    </FilesMatch>
+</IfModule>
+
+
+
+

@@ -1,0 +1,889 @@
+/* Global Styles - Templar Theme */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+
+:root {
+    /* Templar Colors - Red and White */
+    --templar-red: #DC143C;
+    --templar-red-dark: #8B0000;
+    --templar-red-light: #FF4444;
+    --templar-white: #FFFFFF;
+    --templar-white-off: #F8F9FA;
+    --templar-gold: #FFD700;
+    --templar-silver: #C0C0C0;
+    
+    /* Semantic Colors */
+    --primary: var(--templar-red);
+    --primary-dark: var(--templar-red-dark);
+    --secondary: var(--templar-white);
+    --accent: var(--templar-gold);
+    --light: var(--templar-white);
+    --dark: #1a0000;
+    --success: #228B22;
+    --danger: var(--templar-red);
+    --warning: #FF4500;
+    --info: #4682B4;
+}
+
+/* Cursor personalizado de espada */
+* {
+    /* Cursor principal con emoji de espada */
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><text x="12" y="18" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" fill="%23DC143C">⚔️</text></svg>') 12 12, auto;
+}
+
+/* Cursor de texto para inputs y áreas de texto */
+input, textarea, select, [contenteditable="true"] {
+    cursor: text;
+}
+
+/* Cursor de enlace para botones y enlaces */
+a, button, .btn, [role="button"], [type="button"], [type="submit"] {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><text x="12" y="18" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" fill="%23FFD700">⚔️</text></svg>') 12 12, pointer;
+}
+
+/* Cursor de espera */
+*:disabled, .loading {
+    cursor: wait;
+}
+
+/* Cursor de espada detallado (alternativa) */
+.cursor-espada-detallado * {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none"><defs><filter id="shadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="%23000" flood-opacity="0.3"/></filter></defs><g filter="url(%23shadow)"><path d="M8 4L24 20L20 24L4 8L8 4Z" fill="%23C0C0C0" stroke="%23808080" stroke-width="1"/><path d="M6 6L22 22L18 26L2 10L6 6Z" fill="%23E0E0E0"/><path d="M26 6L28 8L12 24L10 22L26 6Z" fill="%23FFD700" stroke="%23DAA520" stroke-width="0.5"/><path d="M27 7L29 9L13 25L11 23L27 7Z" fill="%23FFF8DC"/><circle cx="16" cy="16" r="2" fill="%23DC143C" stroke="%238B0000" stroke-width="0.5"/><circle cx="16" cy="16" r="1" fill="%23FFD700"/></g></svg>') 16 16, auto;
+}
+
+.cursor-espada-detallado a, 
+.cursor-espada-detallado button, 
+.cursor-espada-detallado .btn, 
+.cursor-espada-detallado [role="button"], 
+.cursor-espada-detallado [type="button"], 
+.cursor-espada-detallado [type="submit"] {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none"><defs><filter id="shadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="%23000" flood-opacity="0.3"/></filter></defs><g filter="url(%23shadow)"><path d="M8 4L24 20L20 24L4 8L8 4Z" fill="%23FFD700" stroke="%23DAA520" stroke-width="1"/><path d="M6 6L22 22L18 26L2 10L6 6Z" fill="%23FFF8DC"/><path d="M26 6L28 8L12 24L10 22L26 6Z" fill="%23DC143C" stroke="%238B0000" stroke-width="0.5"/><path d="M27 7L29 9L13 25L11 23L27 7Z" fill="%23FF4444"/><circle cx="16" cy="16" r="2" fill="%23FFD700" stroke="%23DAA520" stroke-width="0.5"/><circle cx="16" cy="16" r="1" fill="%23FFFFFF"/></g></svg>') 16 16, pointer;
+}
+
+/* Ocultar títulos del carrusel */
+.carousel-caption h2 {
+    display: none !important;
+}
+
+.carousel-caption p {
+    display: none !important;
+}
+
+body {
+    font-family: 'Crimson Text', serif;
+    color: var(--dark);
+    line-height: 1.6;
+    padding-top: 76px;
+    background: 
+        linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(248, 249, 250, 0.1) 50%, rgba(255, 255, 255, 0.1) 100%),
+        url('../images/backgrounds/knight-templar-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    color: var(--primary);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    letter-spacing: 1px;
+}
+
+h1 { 
+    font-size: 2.5rem; 
+    font-weight: 800; 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    color: var(--primary);
+}
+
+h2 { 
+    font-size: 2rem; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    color: var(--primary);
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--primary) 100%);
+    border-bottom: 4px solid var(--light);
+    box-shadow: 0 8px 32px rgba(220,20,60,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+    padding: 0.5rem 0;
+    transition: all 0.4s ease-in-out;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    font-family: 'Cinzel', serif;
+}
+
+.navbar.scrolled {
+    background: rgba(220, 20, 60, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 30px rgba(220, 20, 60, 0.4);
+    padding: 0.3rem 0;
+}
+
+.navbar-brand {
+    font-family: 'Cinzel', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--light) !important;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    letter-spacing: 2px;
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+}
+
+.navbar-nav {
+    gap: 0.1rem;
+    justify-content: center;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.navbar-nav .nav-link {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--light) !important;
+    padding: 0.4rem 0.8rem;
+    margin: 0.05rem;
+    letter-spacing: 0.5px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease-in-out;
+    white-space: nowrap;
+    text-transform: uppercase;
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--accent) !important;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.navbar-nav .nav-link.btn {
+    background: transparent;
+    color: var(--light) !important;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    margin: 0.05rem;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+    border: 2px solid var(--light);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-weight: 700;
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+}
+
+.navbar-nav .nav-link.btn:hover {
+    background: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+}
+
+/* Estilos específicos para botones de autenticación */
+
+/* Dropdown */
+.dropdown-menu {
+    background: rgba(220, 20, 60, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--accent) !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    min-width: 200px;
+}
+
+.dropdown-item {
+    color: white;
+    font-family: 'Cinzel', serif;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.2s ease-in-out;
+    border-left: 3px solid transparent;
+    position: relative;
+}
+
+.dropdown-item:hover {
+    background: rgba(220, 20, 60, 0.1);
+    color: var(--primary);
+    transform: translateX(4px);
+    border-left-color: var(--primary);
+}
+
+.dropdown-item i {
+    color: white;
+    transition: all 0.2s ease-in-out;
+    font-size: 1rem;
+    margin-right: 0.5rem;
+}
+
+.dropdown-item:hover i {
+    transform: scale(1.1);
+    color: var(--primary-dark);
+}
+
+/* Dropdown toggle arrow */
+.dropdown-toggle::after {
+    color: var(--accent);
+    transition: all 0.3s ease-in-out;
+}
+
+.dropdown-toggle:hover::after {
+    color: var(--light);
+}
+
+/* Active dropdown state */
+.nav-item.dropdown.show .dropdown-toggle {
+    color: var(--accent) !important;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent);
+}
+
+/* Ensure dropdown menu is visible when shown */
+.dropdown-menu.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 1050 !important;
+}
+
+/* Dropdown menu positioning */
+.dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    z-index: 1050 !important;
+    display: none !important;
+}
+
+.dropdown-menu.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+/* Ensure dropdown toggle works */
+.dropdown-toggle {
+    cursor: pointer !important;
+}
+
+.dropdown-toggle:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25) !important;
+}
+
+/* Force dropdown visibility */
+.nav-item.dropdown .dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: auto !important;
+    z-index: 9999 !important;
+    min-width: 200px !important;
+    margin-top: 0.125rem !important;
+    border: 1px solid var(--accent) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+}
+
+.nav-item.dropdown.show .dropdown-menu {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+/* Override any conflicting styles */
+.navbar-nav .dropdown-menu {
+    position: absolute !important;
+    float: none !important;
+    width: auto !important;
+    margin-top: 0 !important;
+    background-color: rgba(220, 20, 60, 0.95) !important;
+    border: 1px solid var(--accent) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+}
+
+/* Cards */
+.card {
+    background: var(--light);
+    border: 2px solid var(--primary);
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--light);
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    border-bottom: 2px solid var(--accent);
+    padding: 1rem;
+}
+
+.card-body {
+    color: var(--dark);
+}
+
+/* Buttons */
+.btn {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border: 2px solid var(--primary);
+    color: var(--light);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(220, 20, 60, 0.3);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--success) 0%, #1a5f1a 100%);
+    border: 2px solid var(--success);
+    color: var(--light);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, var(--warning) 0%, #cc3700 100%);
+    border: 2px solid var(--warning);
+    color: var(--light);
+}
+
+/* Forms */
+.form-control {
+    border: 2px solid var(--primary);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-family: 'Crimson Text', serif;
+    transition: all 0.3s ease-in-out;
+    background: var(--light);
+    color: var(--dark);
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(220, 20, 60, 0.25);
+    outline: none;
+}
+
+/* Text readability */
+p, .lead, .text-muted {
+    color: var(--dark);
+    text-shadow: none;
+}
+
+.container, .row, .col {
+    position: relative;
+    z-index: 1;
+}
+
+/* Sections */
+section {
+    padding: 4rem 0;
+    background: var(--light);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.section-header p {
+    color: var(--dark);
+    font-size: 1.1rem;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--light);
+    padding: 6rem 0;
+    text-align: center;
+}
+
+.hero h1 {
+    color: var(--light);
+    margin-bottom: 1.5rem;
+}
+
+.hero p {
+    color: var(--light);
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        background: rgba(220, 20, 60, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        padding: 1rem;
+        margin-top: 1rem;
+        border: 1px solid var(--light);
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    
+    .navbar-nav .nav-link {
+        margin: 0.2rem 0;
+        text-align: center;
+        border-radius: 5px;
+        flex: none;
+        min-width: auto;
+    }
+}
+
+/* Footer Templario */
+.footer-templar {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--light);
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-templar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="templar-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23templar-pattern)"/></svg>');
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.footer-top {
+    position: relative;
+    z-index: 2;
+}
+
+.footer-logo h4 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.footer-logo i {
+    font-size: 2rem;
+    color: var(--accent);
+}
+
+.footer-social h6 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    color: var(--accent);
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    font-size: 1.2rem;
+}
+
+.social-link:hover {
+    background: var(--accent);
+    color: var(--dark);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+.footer-links h6 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.footer-link {
+    color: var(--light);
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    display: inline-block;
+    padding: 0.25rem 0;
+}
+
+.footer-link:hover {
+    color: var(--accent);
+    transform: translateX(5px);
+    text-decoration: none;
+}
+
+.footer-link i {
+    color: var(--accent);
+    transition: all 0.3s ease-in-out;
+}
+
+.footer-link:hover i {
+    transform: scale(1.2);
+}
+
+.footer-contact h6 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.contact-item i {
+    font-size: 1.2rem;
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+}
+
+.contact-item a {
+    transition: all 0.3s ease-in-out;
+}
+
+.contact-item a:hover {
+    color: var(--accent) !important;
+}
+
+.footer-bottom {
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 2;
+}
+
+.footer-bottom-links a {
+    transition: all 0.3s ease-in-out;
+    font-size: 0.9rem;
+}
+
+.footer-bottom-links a:hover {
+    color: var(--accent) !important;
+    text-decoration: none;
+}
+
+/* Scroll to Top Button */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    color: var(--accent);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+}
+
+.scroll-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+    background: var(--accent);
+    color: var(--dark);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    section { padding: 2rem 0; }
+    .card-img-top { height: 200px; object-fit: cover; }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    
+    .footer-templar {
+        text-align: center;
+    }
+    
+    .social-links {
+        justify-content: center;
+    }
+    
+    .contact-item {
+        justify-content: center;
+        text-align: left;
+    }
+    
+    .footer-bottom-links {
+        text-align: center;
+        margin-top: 1rem;
+    }
+    
+    .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+}
+
+/* Menú hamburguesa con rayas blancas - Global */
+.navbar-toggler {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.25rem 0.5rem;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Estilos para el dropdown del usuario en la barra superior - Global */
+.navbar .dropdown-toggle {
+    color: white !important;
+}
+
+.navbar .dropdown-toggle:hover {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.navbar .dropdown-toggle:focus {
+    color: white !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+}
+
+.navbar .dropdown-menu {
+    background-color: rgba(220, 20, 60, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+    backdrop-filter: blur(10px) !important;
+    margin-top: 0.5rem !important;
+    display: none !important;
+    min-width: 180px !important;
+    max-width: 220px !important;
+    right: 0 !important;
+    left: auto !important;
+}
+
+.navbar .dropdown-menu.show {
+    display: block !important;
+}
+
+.navbar .dropdown-item {
+    padding: 0.75rem 1.25rem !important;
+    color: white !important;
+    border-radius: 4px !important;
+    margin: 0.25rem 0.5rem !important;
+    transition: all 0.3s ease !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    font-size: 0.9rem !important;
+}
+
+.navbar .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    transform: translateX(5px) !important;
+}
+
+.navbar .dropdown-divider {
+    margin: 0.5rem 0.5rem !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Estilos para dropdowns en menú hamburguesa - Global */
+@media (max-width: 991.98px) {
+    .navbar-collapse .dropdown-menu {
+        position: static !important;
+        float: none !important;
+        width: calc(100% - 2rem) !important;
+        margin: 0.5rem 1rem !important;
+        background-color: rgba(220, 20, 60, 0.95) !important;
+        border: 2px solid rgba(255, 255, 255, 0.4) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+        backdrop-filter: blur(15px) !important;
+        display: none !important;
+        transform: none !important;
+        will-change: auto !important;
+        padding: 0.5rem 0 !important;
+        max-height: 300px !important;
+        overflow-y: auto !important;
+        z-index: 1050 !important;
+    }
+    
+    .navbar-collapse .dropdown-menu.show {
+        display: block !important;
+        animation: slideDown 0.3s ease-out !important;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Deshabilitar el comportamiento por defecto de Bootstrap en móviles */
+    .navbar-collapse .dropdown-toggle[data-bs-toggle="dropdown"] {
+        pointer-events: auto !important;
+    }
+    
+    /* Hover para dropdowns en responsive */
+    .navbar-collapse .dropdown:hover .dropdown-menu {
+        display: block !important;
+        animation: slideDown 0.3s ease-out !important;
+    }
+    
+    /* Asegurar que los botones de login/register estén por debajo */
+    .navbar-collapse .btn {
+        z-index: 1000 !important;
+        position: relative !important;
+    }
+    
+    /* Asegurar que el contenedor del menú tenga z-index alto */
+    .navbar-collapse {
+        z-index: 1055 !important;
+        position: relative !important;
+    }
+    
+    /* Los dropdowns deben estar por encima de todo */
+    .navbar-collapse .dropdown {
+        z-index: 1060 !important;
+        position: relative !important;
+    }
+    
+    .navbar-collapse .dropdown-item {
+        padding: 1rem 1.5rem !important;
+        color: white !important;
+        border-radius: 8px !important;
+        margin: 0.25rem 0.75rem !important;
+        transition: all 0.3s ease !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        font-size: 0.95rem !important;
+        font-weight: 500 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+    }
+    
+    .navbar-collapse .dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.25) !important;
+        color: white !important;
+        transform: translateX(8px) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    .navbar-collapse .dropdown-item:active {
+        background: rgba(255, 255, 255, 0.3) !important;
+        transform: translateX(5px) !important;
+    }
+    
+    .navbar-collapse .dropdown-divider {
+        margin: 0.75rem 1rem !important;
+        border-color: rgba(255, 255, 255, 0.4) !important;
+        border-width: 1px !important;
+    }
+    
+    /* Mejorar el espaciado del contenedor del menú */
+    .navbar-collapse {
+        padding: 1rem 0 !important;
+    }
+    
+    .navbar-collapse .nav-item {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .navbar-collapse .dropdown-toggle::after {
+        float: right !important;
+        margin-top: 0.5rem !important;
+    }
+    
+    /* Mejorar el espaciado del menú colapsado */
+    .navbar-collapse {
+        margin-top: 1rem;
+    }
+    
+    .navbar-collapse .navbar-nav {
+        margin: 0 !important;
+    }
+    
+    .navbar-collapse .nav-item {
+        margin-bottom: 0.5rem;
+    }
+}

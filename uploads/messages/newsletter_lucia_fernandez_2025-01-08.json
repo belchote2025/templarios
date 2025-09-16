@@ -1,0 +1,23 @@
+{
+  "fecha": "2025-01-08 17:15:45",
+  "tipo": "newsletter_suscripcion",
+  "email": "lucia.fernandez@universidad.edu",
+  "ip_address": "192.168.1.120",
+  "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36",
+  "metodo": "formsubmit",
+  "estado": "procesado",
+  "datos_adicionales": {
+    "acepta_privacidad": true,
+    "fuente": "formulario_noticias",
+    "timestamp": 1736332545,
+    "interes": "investigacion_historica",
+    "experiencia_previa": "estudiante_historia"
+  },
+  "preferencias": {
+    "recibir_eventos": true,
+    "recibir_noticias": true,
+    "recibir_recordatorios": false,
+    "frecuencia": "mensual"
+  },
+  "comentarios": "Estudiante de Historia interesada en la tradición templaria para proyecto de investigación"
+}

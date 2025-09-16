@@ -1,0 +1,22 @@
+{
+  "fecha": "2025-01-08 15:45:22",
+  "tipo": "newsletter_suscripcion",
+  "email": "carlos.rodriguez@empresa.com",
+  "ip_address": "192.168.1.110",
+  "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+  "metodo": "formsubmit",
+  "estado": "procesado",
+  "datos_adicionales": {
+    "acepta_privacidad": true,
+    "fuente": "formulario_noticias",
+    "timestamp": 1736332522,
+    "interes": "eventos_fiestas",
+    "experiencia_previa": "asistente_regular"
+  },
+  "preferencias": {
+    "recibir_eventos": true,
+    "recibir_noticias": true,
+    "recibir_recordatorios": true,
+    "frecuencia": "semanal"
+  }
+}

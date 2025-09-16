@@ -1,0 +1,66 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Set the base directory
+RewriteBase /prueba-php/public/
+
+# If the requested file or directory doesn't exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route all other requests to index.php
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# Enable error reporting for debugging
+php_flag display_errors on
+php_value error_reporting E_ALL
+
+# Prevent directory listing for most directories
+Options -Indexes
+
+# Admin directory access handled by individual .htaccess files
+
+# Set default character set
+AddDefaultCharset UTF-8
+
+# Protect sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect specific files
+<FilesMatch "^(composer\.json|composer\.lock|\.env|phpunit\.xml)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Handle Authorization Header
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Handle errors
+ErrorDocument 404 /prueba-php/public/index.php?url=error/404
+ErrorDocument 500 /prueba-php/public/index.php?url=error/500
+
+# Enable GZIP compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# Set cache headers for static assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresDefault "access plus 2 days"
+</IfModule>

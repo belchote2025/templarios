@@ -1,0 +1,20 @@
+LOG DE EMAILS - 08/01/2025
+=========================
+
+10:30:15 | Email enviado | Para: juan.perez@ejemplo.com | Asunto: Respuesta a consulta de contacto
+10:35:22 | Newsletter | Para: maria.garcia@ejemplo.com | Asunto: ¡Bienvenido al boletín de la Filá Mariscales!
+10:42:18 | Email enviado | Para: admin@filamariscales.com | Asunto: Nueva suscripción al newsletter
+10:45:33 | Email enviado | Para: carlos.rodriguez@ejemplo.com | Asunto: Información sobre eventos
+
+ESTADÍSTICAS DEL DÍA:
+--------------------
+Total emails enviados: 4
+Mensajes de contacto: 1
+Suscripciones newsletter: 1
+Notificaciones admin: 2
+
+ESTADO DEL SISTEMA:
+------------------
+FormSubmit: ✅ Funcionando
+Base de datos: ✅ Conectada
+Logs: ✅ Guardándose correctamente

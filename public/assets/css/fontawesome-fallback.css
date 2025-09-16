@@ -1,0 +1,147 @@
+/* Font Awesome Fallback Styles */
+/* Este archivo asegura que los iconos se muestren correctamente */
+
+/* Verificar que Font Awesome esté cargado */
+.fas, .far, .fab, .fal, .fad {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome", sans-serif !important;
+    font-weight: 900;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fallback para iconos específicos si Font Awesome no carga */
+.fa-users:before {
+    content: "👥";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-home:before {
+    content: "🏠";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-cog:before {
+    content: "⚙️";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-calendar:before {
+    content: "📅";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-calendar-alt:before {
+    content: "📅";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-image:before {
+    content: "🖼️";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-plus:before {
+    content: "➕";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-edit:before {
+    content: "✏️";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-trash:before {
+    content: "🗑️";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-eye:before {
+    content: "👁️";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-download:before {
+    content: "⬇️";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-upload:before {
+    content: "⬆️";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-search:before {
+    content: "🔍";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-bars:before {
+    content: "☰";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-times:before {
+    content: "✕";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-check:before {
+    content: "✓";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-exclamation:before {
+    content: "⚠️";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-info:before {
+    content: "ℹ️";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.fa-question:before {
+    content: "❓";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+/* Asegurar que los iconos tengan el tamaño correcto */
+.fa-2x {
+    font-size: 2em !important;
+}
+
+.fa-3x {
+    font-size: 3em !important;
+}
+
+.fa-lg {
+    font-size: 1.33333em !important;
+    line-height: 0.75em !important;
+    vertical-align: -0.0667em !important;
+}
+
+/* Opacidad para iconos con clase opacity-50 */
+.opacity-50 {
+    opacity: 0.5 !important;
+}
+
+/* Estilos para iconos en botones */
+.btn i {
+    margin-right: 0.25rem;
+}
+
+.btn i:last-child {
+    margin-right: 0;
+    margin-left: 0.25rem;
+}
+
+/* Debug: mostrar borde rojo si Font Awesome no está cargado */
+.fas:not([class*="fa-"]):before {
+    content: "⚠️";
+    color: red;
+    font-weight: bold;
+}

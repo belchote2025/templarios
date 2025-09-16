@@ -1,0 +1,23 @@
+{
+  "fecha": "2025-01-08 19:45:18",
+  "tipo": "newsletter_suscripcion",
+  "email": "pedro.lopez@trabajo.com",
+  "ip_address": "192.168.1.130",
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  "metodo": "formsubmit",
+  "estado": "procesado",
+  "datos_adicionales": {
+    "acepta_privacidad": true,
+    "fuente": "formulario_noticias",
+    "timestamp": 1736332518,
+    "interes": "eventos_fiestas",
+    "experiencia_previa": "participante_ocasional"
+  },
+  "preferencias": {
+    "recibir_eventos": true,
+    "recibir_noticias": true,
+    "recibir_recordatorios": true,
+    "frecuencia": "quincenal"
+  },
+  "comentarios": "Interesado en participar en las próximas Fiestas de Moros y Cristianos"
+}

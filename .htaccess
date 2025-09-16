@@ -1,0 +1,7 @@
+# Configuración mínima para Apache
+RewriteEngine On
+
+# Permitir acceso a archivos PHP
+<Files "*.php">
+    Require all granted
+</Files> 

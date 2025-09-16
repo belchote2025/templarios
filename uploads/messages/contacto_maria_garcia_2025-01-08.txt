@@ -1,0 +1,38 @@
+NUEVO MENSAJE DE CONTACTO
+========================
+
+Fecha: 08/01/2025 14:30:15
+IP: 192.168.1.105
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+
+DATOS DEL CONTACTO:
+------------------
+Nombre: María García
+Apellidos: López Martínez
+Email: maria.garcia@ejemplo.com
+Asunto: Información para Socios
+
+MENSAJE:
+--------
+Buenos días,
+
+Me pongo en contacto con ustedes porque estoy muy interesada en formar parte 
+de la Filá Mariscales de Caballeros Templarios.
+
+Soy de Elche y desde pequeña he seguido las Fiestas de Moros y Cristianos. 
+Mi familia siempre ha estado muy vinculada a la tradición y me gustaría 
+continuar con esta tradición.
+
+¿Podrían informarme sobre:
+- Requisitos para ser socio
+- Cuotas de afiliación
+- Actividades durante el año
+- Proceso de admisión
+
+Estoy disponible para una entrevista personal si es necesario.
+
+Muchas gracias por su atención.
+
+Saludos cordiales,
+María García López
+Teléfono: 666 123 456

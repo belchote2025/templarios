@@ -1,0 +1,14 @@
+{
+  "fecha": "2025-01-08 10:35:22",
+  "tipo": "newsletter_suscripcion",
+  "email": "maria.garcia@ejemplo.com",
+  "ip_address": "192.168.1.101",
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+  "metodo": "formsubmit",
+  "estado": "procesado",
+  "datos_adicionales": {
+    "acepta_privacidad": true,
+    "fuente": "formulario_noticias",
+    "timestamp": 1736332522
+  }
+}

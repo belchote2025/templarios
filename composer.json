@@ -1,0 +1,19 @@
+{
+    "name": "mariscales1/eventos",
+    "description": "Sistema de gestión de eventos para Filá Mariscales",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "vlucas/phpdotenv": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "echo 'Sistema de eventos instalado correctamente'"
+        ]
+    }
+}

@@ -1,0 +1,25 @@
+NUEVO MENSAJE DE CONTACTO
+========================
+
+Fecha: 08/01/2025 10:30:15
+IP: 192.168.1.100
+
+DATOS DEL CONTACTO:
+------------------
+Nombre: Juan Pérez
+Apellidos: García López
+Email: juan.perez@ejemplo.com
+Asunto: Información General
+
+MENSAJE:
+--------
+Hola, me gustaría obtener más información sobre la Filá Mariscales. 
+¿Podrían enviarme información sobre cómo formar parte de la filá?
+
+Estoy muy interesado en la tradición templaria y me encantaría 
+participar en las actividades.
+
+Gracias por su atención.
+
+Saludos cordiales,
+Juan Pérez

@@ -1,0 +1,19 @@
+# Configuración para archivos de eventos
+<FilesMatch "\.(jpg|jpeg|png|gif)$">
+    Header set Cache-Control "max-age=31536000, public"
+    Header set Content-Type "image/*"
+</FilesMatch>
+
+# Permitir acceso a imágenes
+<FilesMatch "\.(jpg|jpeg|png|gif)$">
+    Require all granted
+</FilesMatch>
+
+# Denegar acceso a otros tipos de archivo
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi)$">
+    Require all denied
+</FilesMatch>
+
+# Configuración de seguridad adicional
+Options -Indexes
+Options -ExecCGI
