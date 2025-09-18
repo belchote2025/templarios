@@ -1,4 +1,4 @@
-<?php
+    1→<?php
 // Verificar si el admin está logueado
 session_start();
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
@@ -6,14 +6,84 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
+// Colocar el working dir en la raíz del proyecto para usar rutas relativas como en public/index.php
+chdir(dirname(__DIR__, 2));
+
+// Cargar configuración y utilidades necesarias
+require_once 'src/config/config.php';
+require_once 'src/config/email_config.php';
+
+// Instanciar modelo de usuario
+$userModel = new User();
+
 // Procesar el formulario si se envía
 $message = '';
 $messageType = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Aquí iría la lógica de crear usuario
-    $message = 'Usuario creado correctamente (simulado)';
-    $messageType = 'success';
+    // Recoger y sanear datos
+    $nombre    = trim($_POST['nombre'] ?? '');
+    $apellidos = trim($_POST['apellidos'] ?? '');
+    $email     = filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL);
+    $password  = $_POST['password'] ?? '';
+    $confirm   = $_POST['confirm_password'] ?? '';
+    $rol       = $_POST['rol'] ?? 'user';
+    $activo    = isset($_POST['activo']) ? 1 : 0;
+
+    $errors = [];
+
+    if ($nombre === '') { $errors[] = 'El nombre es obligatorio.'; }
+    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) { $errors[] = 'El email no es válido.'; }
+    if (strlen($password) < 6) { $errors[] = 'La contraseña debe tener al menos 6 caracteres.'; }
+    if ($password !== $confirm) { $errors[] = 'Las contraseñas no coinciden.'; }
+
+    // Comprobar email único
+    if (empty($errors) && $userModel->findUserByEmail($email)) {
+        $errors[] = 'El correo electrónico ya está registrado.';
+    }
+
+    if (!empty($errors)) {
+        $message = implode('<br>', $errors);
+        $messageType = 'danger';
+    } else {
+        // Hashear contraseña (consistente con AuthController)
+        $hashed = password_hash($password, PASSWORD_ARGON2ID, ['memory_cost' => 65536, 'time_cost' => 4, 'threads' => 2]);
+
+        $data = [
+            'nombre'    => $nombre,
+            'apellidos' => $apellidos,
+            'email'     => $email,
+            'password'  => $hashed,
+            'rol'       => $rol,
+            'activo'    => $activo,
+        ];
+
+        if ($userModel->register($data)) {
+            // Componer y enviar email de bienvenida
+            $loginUrl = URL_ROOT . '/login';
+            $subject  = 'Bienvenido/a a ' . SITE_NAME;
+            $body = "<h2>¡Bienvenido/a, {$nombre}!</h2>"
+                  . "<p>Tu cuenta ha sido creada correctamente.</p>"
+                  . "<p><strong>Datos de acceso</strong></p>"
+                  . "<ul>"
+                  . "<li>Usuario (email): <strong>{$email}</strong></li>"
+                  . "</ul>"
+                  . "<p>Puedes iniciar sesión aquí: <a href='{$loginUrl}'>{$loginUrl}</a></p>"
+                  . "<p style='font-size:12px;color:#666'>Por seguridad, no enviamos contraseñas por email. Si no recuerdas tu contraseña, utiliza la opción de recuperación en la página de inicio de sesión.</p>";
+
+            $sent = enviarEmail($email, $subject, $body);
+
+            if ($sent) {
+                $message = 'Usuario creado correctamente y email de bienvenida enviado.';
+            } else {
+                $message = 'Usuario creado correctamente, pero no se pudo enviar el email de bienvenida.';
+            }
+            $messageType = 'success';
+        } else {
+            $message = 'Ocurrió un error al crear el usuario.';
+            $messageType = 'danger';
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -72,22 +142,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <h5 class="mb-0">Información del Usuario</h5>
                     </div>
                     <div class="card-body">
-                        <form method="POST">
+                        <form method="POST" autocomplete="off">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="nombre" class="form-label">Nombre *</label>
-                                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                    <input type="text" class="form-control" id="nombre" name="nombre" value="<?= htmlspecialchars($_POST['nombre'] ?? '') ?>" required>
                                 </div>
                                 
                                 <div class="col-md-6 mb-3">
                                     <label for="apellidos" class="form-label">Apellidos</label>
-                                    <input type="text" class="form-control" id="apellidos" name="apellidos">
+                                    <input type="text" class="form-control" id="apellidos" name="apellidos" value="<?= htmlspecialchars($_POST['apellidos'] ?? '') ?>">
                                 </div>
                             </div>
                             
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email *</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
+                                <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
                             </div>
                             
                             <div class="row">
@@ -105,15 +175,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="mb-3">
                                 <label for="rol" class="form-label">Rol</label>
                                 <select class="form-select" id="rol" name="rol">
-                                    <option value="user">Usuario</option>
-                                    <option value="socio">Socio</option>
-                                    <option value="admin">Administrador</option>
+                                    <option value="user" <?= (($_POST['rol'] ?? '') === 'user') ? 'selected' : '' ?>>Usuario</option>
+                                    <option value="socio" <?= (($_POST['rol'] ?? '') === 'socio') ? 'selected' : '' ?>>Socio</option>
+                                    <option value="admin" <?= (($_POST['rol'] ?? '') === 'admin') ? 'selected' : '' ?>>Administrador</option>
                                 </select>
                             </div>
                             
                             <div class="mb-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="activo" name="activo" checked>
+                                    <input class="form-check-input" type="checkbox" id="activo" name="activo" <?= isset($_POST['activo']) ? 'checked' : 'checked' ?>>
                                     <label class="form-check-label" for="activo">
                                         Usuario activo
                                     </label>

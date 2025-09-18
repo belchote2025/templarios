@@ -618,6 +618,72 @@ class AdminController extends Controller {
         }
         $this->redirect('/admin/usuarios');
     }
+
+    // Generate a temporary password for a user (returns plaintext once in JSON)
+    public function generarPasswordTemporal($id = null) {
+        header('Content-Type: application/json');
+
+        // Require POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+            return;
+        }
+
+        if (!$id || !is_numeric($id)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID de usuario inválido']);
+            return;
+        }
+
+        if (!$this->userModel) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Modelo de usuario no disponible']);
+            return;
+        }
+
+        try {
+            // Generate strong temporary password
+            $tempPassword = $this->generateStrongTempPassword(12);
+
+            // Hash using Argon2id for consistency
+            $hashed = password_hash($tempPassword, PASSWORD_ARGON2ID, ['memory_cost' => 65536, 'time_cost' => 4, 'threads' => 2]);
+
+            // Update user password (method tolerates absence of temp fields)
+            $this->userModel->updatePassword($id, $hashed);
+
+            // Mark as must change on next login (if column exists)
+            if (method_exists($this->userModel, 'setMustChangePassword')) {
+                $this->userModel->setMustChangePassword($id, 1);
+            }
+
+            echo json_encode(['success' => true, 'password' => $tempPassword]);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Error al generar contraseña temporal']);
+        }
+    }
+
+    // Helper to generate a strong temporary password
+    private function generateStrongTempPassword($length = 12) {
+        $lowercase = 'abcdefghijkmnopqrstuvwxyz';
+        $uppercase = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+        $numbers = '23456789';
+        $symbols = '!@#$%^&*';
+
+        $password = '';
+        // Ensure at least one of each
+        $password .= $lowercase[random_int(0, strlen($lowercase) - 1)];
+        $password .= $uppercase[random_int(0, strlen($uppercase) - 1)];
+        $password .= $numbers[random_int(0, strlen($numbers) - 1)];
+        $password .= $symbols[random_int(0, strlen($symbols) - 1)];
+
+        $all = $lowercase . $uppercase . $numbers . $symbols;
+        for ($i = 4; $i < $length; $i++) {
+            $password .= $all[random_int(0, strlen($all) - 1)];
+        }
+        return str_shuffle($password);
+    }
     
     // Método para redirigir (sobrescribe el del controlador padre)
     protected function redirect($url) {
