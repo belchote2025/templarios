@@ -259,10 +259,6 @@ if (empty($url[0])) {
                 $id = isset($url[2]) ? $url[2] : null;
                 $estado = isset($url[3]) ? $url[3] : null;
                 $adminController->cambiarEstadoNoticia($id, $estado);
-            } elseif ($action === 'generar-password-temporal') {
-                // Ruta: /admin/generar-password-temporal/{id} (POST)
-                $id = isset($url[2]) ? $url[2] : null;
-                $adminController->generarPasswordTemporal($id);
             } else {
                 $adminController->dashboard();
             }

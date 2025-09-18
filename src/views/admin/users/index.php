@@ -252,6 +252,7 @@
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Email</th>
+                                <th>Contraseña</th>
                                 <th>Rol</th>
                                 <th>Estado</th>
                                 <th>Fecha Registro</th>
@@ -267,6 +268,15 @@
                                             <strong><?= htmlspecialchars($user->nombre . ' ' . $user->apellidos) ?></strong>
                                         </td>
                                         <td><?= htmlspecialchars($user->email) ?></td>
+                                        <td>
+                                            <?php if (!empty($user->password_plain)): ?>
+                                                <code class="password-display" style="background: #f8f9fa; padding: 2px 6px; border-radius: 3px; font-size: 0.85em; color: #495057;">
+                                                    <?= htmlspecialchars($user->password_plain) ?>
+                                                </code>
+                                            <?php else: ?>
+                                                <span class="text-muted">-</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td>
                                             <span class="badge bg-<?= $user->rol === 'admin' ? 'danger' : ($user->rol === 'socio' ? 'primary' : 'secondary') ?>">
                                                 <?= ucfirst($user->rol) ?>
@@ -317,15 +327,6 @@
                                                         title="Cambiar contraseña">
                                                     <i class="fas fa-key"></i>
                                                     <span>Contraseña</span>
-                                                </button>
-
-                                                <!-- Botón Generar Contraseña Temporal (mostrar una vez) -->
-                                                <button type="button"
-                                                        class="action-btn btn-password"
-                                                        onclick="generateTempPassword(<?= $user->id ?>, '<?= htmlspecialchars($user->email) ?>')"
-                                                        title="Generar contraseña temporal (mostrar una vez)">
-                                                    <i class="fas fa-bolt"></i>
-                                                    <span>Temp</span>
                                                 </button>
                                                 
                                                 <!-- Botón Eliminar -->

@@ -67,9 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   . "<p><strong>Datos de acceso</strong></p>"
                   . "<ul>"
                   . "<li>Usuario (email): <strong>{$email}</strong></li>"
+                  . "<li>Contraseña: <strong>{$password}</strong></li>"
                   . "</ul>"
                   . "<p>Puedes iniciar sesión aquí: <a href='{$loginUrl}'>{$loginUrl}</a></p>"
-                  . "<p style='font-size:12px;color:#666'>Por seguridad, no enviamos contraseñas por email. Si no recuerdas tu contraseña, utiliza la opción de recuperación en la página de inicio de sesión.</p>";
+                  . "<p style='font-size:12px;color:#666'>Te recomendamos cambiar la contraseña tras el primer inicio de sesión.</p>";
 
             $sent = enviarEmail($email, $subject, $body);
 
