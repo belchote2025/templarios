@@ -370,12 +370,11 @@ class Pages extends Controller {
                     return;
                 }
 
-                // Actualizar contraseña
-                $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-                $stmt = $db->query("UPDATE usuarios SET password = ?, password_plain = ?, updated_at = NOW() WHERE id = ?");
+                // Actualizar contraseña (solo hash, nunca en texto plano) con Argon2id
+                $hashed_password = password_hash($new_password, PASSWORD_ARGON2ID, ['memory_cost' => 65536, 'time_cost' => 4, 'threads' => 2]);
+                $stmt = $db->query("UPDATE usuarios SET password = ?, updated_at = NOW() WHERE id = ?");
                 $stmt->bindParam(1, $hashed_password);
-                $stmt->bindParam(2, $new_password);
-                $stmt->bindParam(3, $user_id);
+                $stmt->bindParam(2, $user_id);
                 
                 if ($stmt->execute()) {
                     setFlashMessage('Contraseña cambiada correctamente.', 'success');

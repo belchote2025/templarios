@@ -22,6 +22,10 @@ define('URL_ROOT', 'http://localhost/prueba-php/public');
 define('SITE_NAME', 'Filá Mariscales de Caballeros Templarios de Elche');
 define('APP_VERSION', '1.0.0');
 
+// Notifications / Email via FormSubmit
+define('FORMSUBMIT_TO', 'edu300572@gmail.com');
+define('FORMSUBMIT_LOG_SUCCESS', true); // Log successful sends to error_log
+
 // Error reporting (set to 0 in production)
 error_reporting(E_ALL);
 ini_set('display_errors', 1);

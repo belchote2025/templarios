@@ -5,6 +5,62 @@ function redirect($url) {
     exit();
 }
 
+// Send a notification to admin via FormSubmit
+function sendFormSubmitNotification($subject, $message, $name = 'Notificación', $fromEmail = 'no-reply@filamariscales.es', $extraFields = []) {
+    if (!defined('FORMSUBMIT_TO')) {
+        error_log('FORMSUBMIT_TO is not defined. Cannot send FormSubmit notification.');
+        return false;
+    }
+
+    $payload = array_merge([
+        'name' => $name,
+        'email' => $fromEmail,
+        'message' => $message,
+        '_subject' => $subject,
+        '_template' => 'table',
+        '_captcha' => 'false'
+    ], $extraFields);
+
+    $url = 'https://formsubmit.co/' . FORMSUBMIT_TO;
+
+    // Prefer cURL
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+        $response = curl_exec($ch);
+        if ($response === false) {
+            error_log('FormSubmit cURL error: ' . curl_error($ch));
+        } elseif (defined('FORMSUBMIT_LOG_SUCCESS') && FORMSUBMIT_LOG_SUCCESS) {
+            error_log('[FormSubmit] OK subject=' . ($payload['_subject'] ?? '(no subject)'));
+        }
+        curl_close($ch);
+        return $response !== false;
+    }
+
+    // Fallback to stream context
+    $options = [
+        'http' => [
+            'method' => 'POST',
+            'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+            'content' => http_build_query($payload),
+            'timeout' => 8
+        ]
+    ];
+    $context = stream_context_create($options);
+    $result = @file_get_contents($url, false, $context);
+    if ($result === false) {
+        error_log('FormSubmit stream error: unable to send request');
+        return false;
+    } elseif (defined('FORMSUBMIT_LOG_SUCCESS') && FORMSUBMIT_LOG_SUCCESS) {
+        error_log('[FormSubmit] OK subject=' . ($payload['_subject'] ?? '(no subject)'));
+    }
+    return true;
+}
+
 // Check if user is logged in
 function isLoggedIn() {
     return isset($_SESSION['user_id']);

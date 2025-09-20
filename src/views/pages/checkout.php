@@ -160,6 +160,9 @@
                                         <i class="bi bi-check-circle me-2"></i>Finalizar Pedido
                                     </button>
                                 </div>
+                                <p class="small text-muted mt-2">
+                                    Recibirás un correo de confirmación de tu pedido en tu bandeja de entrada.
+                                </p>
                             </form>
                         </div>
                     </div>

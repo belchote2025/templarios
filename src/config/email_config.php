@@ -14,7 +14,7 @@ define('FILA_NAME', 'Filá Mariscales de Caballeros Templarios');
 define('FILA_REPLY_TO', 'edu300572@gmail.com');
 
 // Configuración para desarrollo local
-define('DEVELOPMENT_MODE', false); // Activado para envío real
+define('DEVELOPMENT_MODE', true); // true = no enviar correos por PHP/SMTP (solo log)
 
 // Función para enviar email usando PHPMailer (si está disponible)
 function enviarEmailConPHPMailer($destinatario, $asunto, $mensaje) {

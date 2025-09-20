@@ -93,10 +93,11 @@
                                 </div>
                                 
                                 <!-- Campos ocultos para FormSubmit -->
-                                <input type="hidden" name="_next" value="http://localhost/prueba-php/public/contacto?enviado=true">
+                                <input type="hidden" name="_next" value="<?= URL_ROOT ?>/contacto?enviado=true">
                                 <input type="hidden" name="_subject" value="Nuevo mensaje del formulario de contacto - Filá Mariscales">
                                 <input type="hidden" name="_captcha" value="false">
                                 <input type="hidden" name="_template" value="table">
+                                <input type="hidden" name="_autoresponse" value="Hemos recibido tu mensaje en Filá Mariscales. Te responderemos a la mayor brevedad. ¡Gracias por contactarnos!">
                                 
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-danger btn-lg">
@@ -104,6 +105,9 @@
                                         Enviar Mensaje
                                     </button>
                                 </div>
+                                <p class="small text-muted mt-2">
+                                    Recibirás un correo de confirmación en tu bandeja de entrada.
+                                </p>
                             </form>
                         </div>
                     </div>

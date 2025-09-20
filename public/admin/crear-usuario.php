@@ -11,7 +11,6 @@ chdir(dirname(__DIR__, 2));
 
 // Cargar configuración y utilidades necesarias
 require_once 'src/config/config.php';
-require_once 'src/config/email_config.php';
 
 // Instanciar modelo de usuario
 $userModel = new User();
@@ -59,26 +58,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         if ($userModel->register($data)) {
-            // Componer y enviar email de bienvenida
+            // Notificar vía FormSubmit a la administración (no enviar contraseñas por correo)
             $loginUrl = URL_ROOT . '/login';
-            $subject  = 'Bienvenido/a a ' . SITE_NAME;
-            $body = "<h2>¡Bienvenido/a, {$nombre}!</h2>"
-                  . "<p>Tu cuenta ha sido creada correctamente.</p>"
-                  . "<p><strong>Datos de acceso</strong></p>"
-                  . "<ul>"
-                  . "<li>Usuario (email): <strong>{$email}</strong></li>"
-                  . "<li>Contraseña: <strong>{$password}</strong></li>"
-                  . "</ul>"
-                  . "<p>Puedes iniciar sesión aquí: <a href='{$loginUrl}'>{$loginUrl}</a></p>"
-                  . "<p style='font-size:12px;color:#666'>Te recomendamos cambiar la contraseña tras el primer inicio de sesión.</p>";
+            $subject  = 'Nuevo usuario creado en ' . SITE_NAME;
+            $lines = [];
+            $lines[] = "Nombre: {$nombre} {$apellidos}";
+            $lines[] = "Email: {$email}";
+            $lines[] = "Rol: {$rol}";
+            $lines[] = "Activo: " . ($activo ? 'Sí' : 'No');
+            $lines[] = "";
+            $lines[] = "URL de acceso: {$loginUrl}";
+            $lines[] = "Nota: No se envían contraseñas por correo por seguridad.";
+            $messageBody = implode("\n", $lines);
 
-            $sent = enviarEmail($email, $subject, $body);
-
-            if ($sent) {
-                $message = 'Usuario creado correctamente y email de bienvenida enviado.';
-            } else {
-                $message = 'Usuario creado correctamente, pero no se pudo enviar el email de bienvenida.';
+            if (!sendFormSubmitNotification($subject, $messageBody, 'Alta de usuario (Admin)', 'no-reply@filamariscales.es')) {
+                error_log('Error notificando alta de usuario a FormSubmit');
             }
+
+            $message = 'Usuario creado correctamente. Se ha notificado a la administración.';
             $messageType = 'success';
         } else {
             $message = 'Ocurrió un error al crear el usuario.';

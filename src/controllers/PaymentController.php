@@ -41,7 +41,7 @@ class PaymentController extends Controller {
                 // Actualizar estado del pedido
                 $this->updateOrderStatus($pedido_id, 'procesando', $payment_result['transaction_id']);
                 
-                // Enviar correo de confirmación
+                // Notificar confirmación de pedido vía FormSubmit (administración)
                 $this->sendOrderConfirmationEmail($pedido_id, $email);
                 
                 echo json_encode([
@@ -137,7 +137,7 @@ class PaymentController extends Controller {
             // Actualizar estado del pedido a pendiente de pago
             $this->updateOrderStatus($pedido_id, 'pendiente_pago');
             
-            // Enviar correo con instrucciones de transferencia
+            // Notificar instrucciones de transferencia vía FormSubmit (administración)
             $this->sendBankTransferInstructions($pedido_id, $email);
             
             echo json_encode([
@@ -216,7 +216,7 @@ class PaymentController extends Controller {
         }
     }
     
-    // Enviar correo de confirmación de pedido
+    // Enviar notificación de confirmación de pedido vía FormSubmit
     private function sendOrderConfirmationEmail($pedido_id, $email) {
         try {
             // Obtener datos del pedido
@@ -238,14 +238,37 @@ class PaymentController extends Controller {
             
             $pedido = $pedido_data[0];
             
-            // Crear contenido del correo
-            $subject = "Confirmación de Pedido #{$pedido_id} - Filá Mariscales";
-            
-            $html_content = $this->generateOrderEmailHTML($pedido, $pedido_data);
-            $text_content = $this->generateOrderEmailText($pedido, $pedido_data);
-            
-            // Enviar correo
-            $this->sendEmail($email, $subject, $html_content, $text_content);
+            // Crear contenido para FormSubmit (notificación interna)
+            $subject = "Nuevo pago confirmado - Pedido #{$pedido_id}";
+            $lines = [];
+            $lines[] = "Pedido #{$pedido->id}";
+            $lines[] = "Fecha: " . date('d/m/Y H:i', strtotime($pedido->fecha_creacion));
+            $lines[] = "Estado: {$pedido->estado}";
+            $lines[] = "Método de Pago: " . ucfirst($pedido->metodo_pago);
+            $lines[] = "Cliente: {$pedido->nombre} {$pedido->apellidos} ({$email})";
+            $lines[] = "Dirección: {$pedido->direccion}, {$pedido->codigo_postal} {$pedido->ciudad}, {$pedido->provincia}";
+            $lines[] = "";
+            $lines[] = "Productos:";
+            foreach ($pedido_data as $item) {
+                $lines[] = "- {$item->nombre_producto} x{$item->cantidad} @ " . number_format($item->precio, 2) . "€ = " . number_format($item->subtotal, 2) . "€";
+            }
+            $lines[] = "";
+            $lines[] = "Total: " . number_format($pedido->total, 2) . "€ (Envío: " . number_format($pedido->envio, 2) . "€ | Descuento: -" . number_format($pedido->descuento, 2) . "€)";
+            $message = implode("\n", $lines);
+
+            // Autorespuesta para el cliente
+            $autoresponse =
+                "¡Gracias por tu pedido en " . SITE_NAME . "!\n\n" .
+                "Hemos recibido tu pedido #{$pedido->id}.\n" .
+                "Pronto te enviaremos más detalles sobre el envío.\n\n" .
+                "Resumen:\n" .
+                "Total: " . number_format($pedido->total, 2) . "€\n" .
+                "Método de pago: " . ucfirst($pedido->metodo_pago);
+
+            sendFormSubmitNotification($subject, $message, 'Notificación de pedidos', 'no-reply@filamariscales.es', [
+                'email' => $email,
+                '_autoresponse' => $autoresponse
+            ]);
             
             return true;
             
@@ -255,22 +278,32 @@ class PaymentController extends Controller {
         }
     }
     
-    // Enviar instrucciones de transferencia bancaria
+    // Enviar notificación de instrucciones de transferencia bancaria vía FormSubmit
     private function sendBankTransferInstructions($pedido_id, $email) {
-        try {
-            $subject = "Instrucciones de Pago - Pedido #{$pedido_id} - Filá Mariscales";
-            
-            $html_content = $this->generateBankTransferEmailHTML($pedido_id);
-            $text_content = $this->generateBankTransferEmailText($pedido_id);
-            
-            $this->sendEmail($email, $subject, $html_content, $text_content);
-            
-            return true;
-            
-        } catch (Exception $e) {
-            error_log("Error sending bank transfer instructions: " . $e->getMessage());
-            return false;
         }
+        $lines[] = "";
+        $lines[] = "Total: " . number_format($pedido->total, 2) . "€ (Envío: " . number_format($pedido->envio, 2) . "€ | Descuento: -" . number_format($pedido->descuento, 2) . "€)";
+        $message = implode("\n", $lines);
+
+        // Autorespuesta para el cliente
+        $autoresponse =
+            "¡Gracias por tu pedido en " . SITE_NAME . "!\n\n" .
+            "Hemos recibido tu pedido #{$pedido->id}.\n" .
+            "Pronto te enviaremos más detalles sobre el envío.\n\n" .
+            "Resumen:\n" .
+            "Total: " . number_format($pedido->total, 2) . "€\n" .
+            "Método de pago: " . ucfirst($pedido->metodo_pago);
+
+        sendFormSubmitNotification($subject, $message, 'Notificación de pedidos', 'no-reply@filamariscales.es', [
+            'email' => $email,
+            '_autoresponse' => $autoresponse
+        ]);
+
+        return true;
+
+    } catch (Exception $e) {
+        error_log("Error sending order confirmation email: " . $e->getMessage());
+        return false;
     }
     
     // Generar HTML del correo de confirmación
@@ -440,28 +473,5 @@ class PaymentController extends Controller {
         return $text;
     }
     
-    // Enviar correo
-    private function sendEmail($to, $subject, $html_content, $text_content) {
-        // Configuración del correo
-        $from = "noreply@filamariscales.es";
-        $from_name = "Filá Mariscales";
-        
-        // Headers del correo
-        $headers = "From: {$from_name} <{$from}>\r\n";
-        $headers .= "Reply-To: info@filamariscales.es\r\n";
-        $headers .= "MIME-Version: 1.0\r\n";
-        $headers .= "Content-Type: multipart/alternative; boundary=\"boundary123\"\r\n";
-        
-        // Cuerpo del correo
-        $body = "--boundary123\r\n";
-        $body .= "Content-Type: text/plain; charset=UTF-8\r\n\r\n";
-        $body .= $text_content . "\r\n\r\n";
-        $body .= "--boundary123\r\n";
-        $body .= "Content-Type: text/html; charset=UTF-8\r\n\r\n";
-        $body .= $html_content . "\r\n\r\n";
-        $body .= "--boundary123--";
-        
-        // Enviar correo
-        return mail($to, $subject, $body, $headers);
-    }
+    // (Helper global sendFormSubmitNotification se usa en lugar de método local)
 }

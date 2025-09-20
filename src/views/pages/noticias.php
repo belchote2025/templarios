@@ -133,6 +133,9 @@
                         </button>
                     </div>
                 </form>
+                <p class="small text-muted mt-2" data-aos="fade-up" data-aos-delay="120">
+                    Recibirás un correo de confirmación de suscripción.
+                </p>
                 
                 <div class="mt-4" data-aos="fade-up" data-aos-delay="150">
                     <div class="form-check form-check-inline">

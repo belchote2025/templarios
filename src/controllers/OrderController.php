@@ -392,7 +392,7 @@ class OrderController extends Controller {
         $stmt->execute([$codigo]);
     }
     
-    // Enviar correo de confirmación de pedido
+    // Enviar notificación de confirmación de pedido vía FormSubmit
     private function sendOrderConfirmationEmail($pedido_id, $email) {
         try {
             // Obtener datos del pedido
@@ -414,14 +414,25 @@ class OrderController extends Controller {
             
             $pedido = $pedido_data[0];
             
-            // Crear contenido del correo
-            $subject = "Confirmación de Pedido #{$pedido_id} - Filá Mariscales";
-            
-            $html_content = $this->generateOrderEmailHTML($pedido, $pedido_data);
-            $text_content = $this->generateOrderEmailText($pedido, $pedido_data);
-            
-            // Enviar correo
-            $this->sendEmail($email, $subject, $html_content, $text_content);
+            // Crear contenido para notificación a FormSubmit (administración)
+            $subject = "Nuevo pedido recibido - Pedido #{$pedido_id}";
+            $lines = [];
+            $lines[] = "Pedido #{$pedido->id}";
+            $lines[] = "Fecha: " . date('d/m/Y H:i', strtotime($pedido->fecha_creacion));
+            $lines[] = "Estado: {$pedido->estado}";
+            $lines[] = "Método de Pago: " . ucfirst($pedido->metodo_pago);
+            $lines[] = "Cliente: {$pedido->nombre} {$pedido->apellidos} ({$email})";
+            $lines[] = "Dirección: {$pedido->direccion}, {$pedido->codigo_postal} {$pedido->ciudad}, {$pedido->provincia}";
+            $lines[] = "";
+            $lines[] = "Productos:";
+            foreach ($pedido_data as $item) {
+                $lines[] = "- {$item->nombre_producto} x{$item->cantidad} @ " . number_format($item->precio, 2) . "€ = " . number_format($item->subtotal, 2) . "€";
+            }
+            $lines[] = "";
+            $lines[] = "Total: " . number_format($pedido->total, 2) . "€ (Envío: " . number_format($pedido->envio, 2) . "€ | Descuento: -" . number_format($pedido->descuento, 2) . "€)";
+            $message = implode("\n", $lines);
+
+            sendFormSubmitNotification($subject, $message, 'Notificación de pedidos', 'no-reply@filamariscales.es');
             
             return true;
             
@@ -533,30 +544,7 @@ class OrderController extends Controller {
         return $text;
     }
     
-    // Enviar correo
-    private function sendEmail($to, $subject, $html_content, $text_content) {
-        // Configuración del correo
-        $from = "noreply@filamariscales.es";
-        $from_name = "Filá Mariscales";
-        
-        // Headers del correo
-        $headers = "From: {$from_name} <{$from}>\r\n";
-        $headers .= "Reply-To: info@filamariscales.es\r\n";
-        $headers .= "MIME-Version: 1.0\r\n";
-        $headers .= "Content-Type: multipart/alternative; boundary=\"boundary123\"\r\n";
-        
-        // Cuerpo del correo
-        $body = "--boundary123\r\n";
-        $body .= "Content-Type: text/plain; charset=UTF-8\r\n\r\n";
-        $body .= $text_content . "\r\n\r\n";
-        $body .= "--boundary123\r\n";
-        $body .= "Content-Type: text/html; charset=UTF-8\r\n\r\n";
-        $body .= $html_content . "\r\n\r\n";
-        $body .= "--boundary123--";
-        
-        // Enviar correo
-        return mail($to, $subject, $body, $headers);
-    }
+    // (Helper global sendFormSubmitNotification se usa en lugar de método local)
     
     // Eliminar de wishlist
     public function removeFromWishlist() {

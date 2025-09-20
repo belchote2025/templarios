@@ -66,26 +66,59 @@ class AuthController extends Controller {
         }
     }
     
-    // Enviar correo de verificación
+    // Notificar verificación de cuenta vía FormSubmit (envío al administrador)
     private function sendVerificationEmail($email, $token) {
-        $config = require __DIR__ . '/../config/security.php';
         $verificationUrl = URLROOT . '/verify-email?token=' . $token;
-        
-        $to = $email;
-        $subject = 'Verifica tu correo electrónico';
-        $message = "
-            <h2>Bienvenido a Filá Mariscales</h2>
-            <p>Por favor, haz clic en el siguiente enlace para verificar tu dirección de correo electrónico:</p>
-            <p><a href='$verificationUrl'>$verificationUrl</a></p>
-            <p>Si no has creado una cuenta, puedes ignorar este correo.</p>
-        ";
-        
-        $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-        $headers .= 'From: ' . $config['mail']['from_address'] . "\r\n";
-        
-        // En un entorno de producción, usaría una biblioteca como PHPMailer
-        @mail($to, $subject, $message, $headers);
+
+        // Mensaje para administración
+        $adminMessage =
+            "Se ha registrado un nuevo usuario que requiere verificación.\n\n" .
+            "Email del usuario: {$email}\n" .
+            "Enlace de verificación: {$verificationUrl}\n\n" .
+            "Accede al enlace para completar la verificación.";
+
+        // Autorespuesta de bienvenida al usuario (enviada por FormSubmit al campo 'email')
+        $autoresponse =
+            "¡Bienvenido/a a " . SITE_NAME . "!\n\n" .
+            "Gracias por registrarte. Para activar tu cuenta, por favor verifica tu correo haciendo clic en el siguiente enlace:\n" .
+            $verificationUrl . "\n\n" .
+            "Si no has solicitado este registro, puedes ignorar este mensaje.";
+
+        // Enviar notificación a admin y autorespuesta al usuario
+        $ok = sendFormSubmitNotification(
+            'Nueva cuenta registrada - Acción requerida (verificación)',
+            $adminMessage,
+            'Nueva verificación de cuenta',
+            'no-reply@filamariscales.com',
+            [
+                'email' => $email,
+                '_autoresponse' => $autoresponse
+            ]
+        );
+        if (!$ok) {
+            $this->logError('Error enviando notificación de verificación via FormSubmit');
+        }
+    }
+
+    // Notificar solicitud de restablecimiento de contraseña vía FormSubmit (envío al administrador)
+    private function sendPasswordResetNotification($email, $resetLink) {
+        $payload = http_build_query([
+            'name' => 'Recuperación de contraseña',
+            'email' => 'no-reply@filamariscales.com',
+            'message' => "Se ha solicitado restablecer la contraseña.\n\n" .
+                         "Email del usuario: {$email}\n" .
+                         "Enlace de restablecimiento: {$resetLink}\n\n" .
+                         "Si no procede, ignora esta solicitud.",
+            '_subject' => 'Solicitud de restablecimiento de contraseña',
+            '_template' => 'table',
+            '_captcha' => 'false'
+        ]);
+
+        if (!sendFormSubmitNotification('Solicitud de restablecimiento de contraseña',
+                urldecode(http_build_query(['message' => $payload['message']], '', '&', PHP_QUERY_RFC3986)),
+                'Recuperación de contraseña', 'no-reply@filamariscales.com')) {
+            $this->logError('Error enviando notificación de reset via FormSubmit');
+        }
     }
     
     // Registrar actividad del usuario
@@ -228,7 +261,7 @@ class AuthController extends Controller {
                     // Registrar actividad
                     $this->logActivity($userId, 'register', 'Nuevo registro de usuario');
                     
-                    setFlashMessage('success', '¡Registro exitoso! Por favor verifica tu correo electrónico para activar tu cuenta.');
+                    setFlashMessage('success', '¡Registro exitoso! Hemos notificado a la administración para verificar tu cuenta. Te avisaremos cuando esté activa.');
                     redirect('/login');
                 } else {
                     $this->logError('Error al registrar usuario: ' . json_encode($data));
@@ -358,13 +391,11 @@ class AuthController extends Controller {
                 $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
                 
                 if ($this->userModel->createPasswordResetToken($email, $token, $expires)) {
-                    // Send email with reset link
+                    // Generar enlace y notificar vía FormSubmit a la administración
                     $resetLink = URL_ROOT . '/reset-password/' . $token;
-                    
-                    // In a real app, you would send an email here
-                    // $this->sendPasswordResetEmail($email, $resetLink);
-                    
-                    setFlashMessage('success', 'Se ha enviado un enlace de restablecimiento a su correo electrónico');
+                    $this->sendPasswordResetNotification($email, $resetLink);
+
+                    setFlashMessage('success', 'Hemos notificado a la administración para procesar el restablecimiento de su contraseña.');
                     redirect('/login');
                 } else {
                     die('Algo salió mal al procesar su solicitud');
@@ -425,8 +456,8 @@ class AuthController extends Controller {
             }
             
             if (empty($data['password_err']) && empty($data['confirm_password_err'])) {
-                // Hash new password
-                $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
+                // Hash new password using Argon2id for consistency
+                $hashedPassword = password_hash($data['password'], PASSWORD_ARGON2ID, ['memory_cost' => 65536, 'time_cost' => 4, 'threads' => 2]);
                 
                 if ($this->userModel->updatePassword($user->id, $hashedPassword)) {
                     // Delete the token
