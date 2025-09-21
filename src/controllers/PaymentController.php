@@ -280,30 +280,67 @@ class PaymentController extends Controller {
     
     // Enviar notificación de instrucciones de transferencia bancaria vía FormSubmit
     private function sendBankTransferInstructions($pedido_id, $email) {
+        try {
+            // Obtener datos del pedido
+            $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $pdo->prepare("
+                SELECT p.*, pi.nombre_producto, pi.precio, pi.cantidad, pi.subtotal
+                FROM pedidos p
+                LEFT JOIN pedido_items pi ON p.id = pi.pedido_id
+                WHERE p.id = ?
+            ");
+            $stmt->execute([$pedido_id]);
+            $pedido_data = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            if (empty($pedido_data)) {
+                return false;
+            }
+
+            $pedido = $pedido_data[0];
+
+            // Crear contenido para notificación interna (administración)
+            $subject = "Pedido pendiente de transferencia - Pedido #{$pedido_id}";
+            $lines = [];
+            $lines[] = "Pedido #{$pedido->id}";
+            $lines[] = "Fecha: " . date('d/m/Y H:i', strtotime($pedido->fecha_creacion));
+            $lines[] = "Estado: {$pedido->estado}";
+            $lines[] = "Método de Pago: " . ucfirst($pedido->metodo_pago);
+            $lines[] = "Cliente: {$pedido->nombre} {$pedido->apellidos} ({$email})";
+            $lines[] = "Dirección: {$pedido->direccion}, {$pedido->codigo_postal} {$pedido->ciudad}, {$pedido->provincia}";
+            $lines[] = "";
+            $lines[] = "Productos:";
+            foreach ($pedido_data as $item) {
+                $lines[] = "- {$item->nombre_producto} x{$item->cantidad} @ " . number_format($item->precio, 2) . "€ = " . number_format($item->subtotal, 2) . "€";
+            }
+            $lines[] = "";
+            $lines[] = "Total: " . number_format($pedido->total, 2) . "€ (Envío: " . number_format($pedido->envio, 2) . "€ | Descuento: -" . number_format($pedido->descuento, 2) . "€)";
+            $lines[] = "";
+            $lines[] = "Pago por transferencia: pendiente de recepción de justificante.";
+            $message = implode("\n", $lines);
+
+            // Autorespuesta para el cliente con instrucciones breves
+            $autoresponse =
+                "Gracias por tu pedido en " . SITE_NAME . ".\n\n" .
+                "Tu pedido #{$pedido_id} está pendiente de pago por transferencia.\n\n" .
+                "Datos bancarios (resumen):\n" .
+                "Banco: Banco Santander\n" .
+                "IBAN: ES91 2100 0418 4502 0005 1332\n" .
+                "BIC/SWIFT: BSCHESMM\n" .
+                "Concepto: Pedido #{$pedido_id} - Filá Mariscales\n\n" .
+                "Importante: Envía el justificante a info@filamariscales.es";
+
+            sendFormSubmitNotification($subject, $message, 'Notificación de pedidos', 'no-reply@filamariscales.es', [
+                'email' => $email,
+                '_autoresponse' => $autoresponse
+            ]);
+
+            return true;
+        } catch (Exception $e) {
+            error_log("Error enviando notificación de transferencia: " . $e->getMessage());
+            return false;
         }
-        $lines[] = "";
-        $lines[] = "Total: " . number_format($pedido->total, 2) . "€ (Envío: " . number_format($pedido->envio, 2) . "€ | Descuento: -" . number_format($pedido->descuento, 2) . "€)";
-        $message = implode("\n", $lines);
-
-        // Autorespuesta para el cliente
-        $autoresponse =
-            "¡Gracias por tu pedido en " . SITE_NAME . "!\n\n" .
-            "Hemos recibido tu pedido #{$pedido->id}.\n" .
-            "Pronto te enviaremos más detalles sobre el envío.\n\n" .
-            "Resumen:\n" .
-            "Total: " . number_format($pedido->total, 2) . "€\n" .
-            "Método de pago: " . ucfirst($pedido->metodo_pago);
-
-        sendFormSubmitNotification($subject, $message, 'Notificación de pedidos', 'no-reply@filamariscales.es', [
-            'email' => $email,
-            '_autoresponse' => $autoresponse
-        ]);
-
-        return true;
-
-    } catch (Exception $e) {
-        error_log("Error sending order confirmation email: " . $e->getMessage());
-        return false;
     }
     
     // Generar HTML del correo de confirmación

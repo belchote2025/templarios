@@ -12,6 +12,12 @@ if (!function_exists('isLoggedIn')) {
     <title><?php echo SITE_NAME; ?> | <?php echo $data['title']; ?></title>
     <meta name="description" content="<?php echo isset($data['description']) ? $data['description'] : SITE_NAME; ?>">
     
+    <!-- PWA: Manifest & Theme Color -->
+    <link rel="manifest" href="/prueba-php/public/manifest.webmanifest">
+    <meta name="theme-color" content="#dc143c">
+    <link rel="icon" sizes="192x192" href="/prueba-php/public/assets/icons/icon-192.png">
+    <link rel="icon" sizes="512x512" href="/prueba-php/public/assets/icons/icon-512.png">
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -643,6 +649,15 @@ if (!function_exists('isLoggedIn')) {
             getCartInfo();
             getWishlistInfo();
         });
+
+        // Registrar Service Worker (PWA)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/prueba-php/public/sw.js')
+                    .then(function(reg) { console.log('SW registrado', reg.scope); })
+                    .catch(function(err) { console.error('Error registrando SW', err); });
+            });
+        }
     </script>
     
     <!-- JavaScript para manejar dropdowns en menú hamburguesa -->

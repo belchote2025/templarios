@@ -1,0 +1,22 @@
+{
+  "name": "Filá Mariscales",
+  "short_name": "Mariscales",
+  "description": "Filá Mariscales de Caballeros Templarios de Elche",
+  "start_url": "/prueba-php/public/",
+  "scope": "/prueba-php/public/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#dc143c",
+  "icons": [
+    {
+      "src": "/prueba-php/public/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/prueba-php/public/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
