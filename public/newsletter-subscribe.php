@@ -10,7 +10,7 @@ require_once '../src/config/config.php';
 // (El envío de correo al usuario se realizará por FormSubmit en el cliente)
 
 // Función para guardar suscripción en base de datos
-function guardarSuscripcion($email) {
+function guardarSuscripcion($email, &$confirmTokenOut = null) {
     try {
         $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -21,26 +21,32 @@ function guardarSuscripcion($email) {
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 email VARCHAR(255) UNIQUE NOT NULL,
                 fecha_suscripcion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                activo BOOLEAN DEFAULT TRUE,
+                activo BOOLEAN DEFAULT FALSE,
+                confirm_token VARCHAR(64) DEFAULT NULL,
+                unsubscribe_token VARCHAR(64) DEFAULT NULL,
                 ip_address VARCHAR(45),
                 user_agent TEXT
             )
         ";
         $pdo->exec($createTable);
         
+        $confirmToken = bin2hex(random_bytes(16));
+        $confirmTokenOut = $confirmToken;
+        
         // Insertar suscripción
         $stmt = $pdo->prepare("
-            INSERT INTO newsletter_subscriptions (email, ip_address, user_agent) 
-            VALUES (?, ?, ?)
+            INSERT INTO newsletter_subscriptions (email, ip_address, user_agent, activo, confirm_token) 
+            VALUES (?, ?, ?, FALSE, ?)
             ON DUPLICATE KEY UPDATE 
             fecha_suscripcion = CURRENT_TIMESTAMP,
-            activo = TRUE
+            activo = VALUES(activo),
+            confirm_token = VALUES(confirm_token)
         ");
         
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
         
-        $stmt->execute([$email, $ip, $userAgent]);
+        $stmt->execute([$email, $ip, $userAgent, $confirmToken]);
         
         return true;
     } catch (PDOException $e) {
@@ -86,7 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Guardar en base de datos
-    $guardado = guardarSuscripcion($email);
+    $confirmToken = null;
+    $guardado = guardarSuscripcion($email, $confirmToken);
     
     if (!$guardado) {
         echo json_encode([
@@ -97,16 +104,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Preparar datos para FormSubmit (para que el frontend haga el POST)
+    $confirmUrl = URL_ROOT . '/newsletter-confirm.php?email=' . urlencode($email) . '&token=' . urlencode($confirmToken);
     $formData = [
         'name' => 'Boletín Filá Mariscales',
         'email' => $email,
-        'message' => "Nueva suscripción al boletín de noticias: $email",
-        '_subject' => 'Nueva suscripción al boletín - Filá Mariscales',
+        'message' => "Nueva suscripción (pendiente de confirmación) al boletín: $email",
+        '_subject' => 'Nueva suscripción al boletín (pendiente) - Filá Mariscales',
         '_template' => 'table',
         '_captcha' => 'false',
-        // Autorespuesta al suscriptor
+        // Autorespuesta con confirmación
         '_autoresponse' => "¡Gracias por suscribirte al boletín de " . SITE_NAME . "!\n\n" .
-                          "A partir de ahora recibirás noticias y eventos destacados en tu correo.",
+                          "Para completar tu suscripción, confirma tu correo haciendo clic en el siguiente enlace:\n" .
+                          $confirmUrl . "\n\n" .
+                          "Si no has solicitado esta suscripción, ignora este mensaje.",
         '_next' => URL_ROOT . '/noticias?subscripcion=ok'
     ];
 

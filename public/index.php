@@ -12,6 +12,23 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+// Manejadores globales de errores/excepciones para mostrar 500 amigable
+set_error_handler(function($severity, $message, $file, $line) {
+    // Convertir todos los errores en excepciones
+    throw new ErrorException($message, 0, $severity, $file, $line);
+});
+
+set_exception_handler(function($e) {
+    error_log('[500] ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+    http_response_code(500);
+    if (file_exists('src/views/500.php')) {
+        require 'src/views/500.php';
+    } else {
+        echo "<h1>Error 500</h1><p>Ha ocurrido un error inesperado. Inténtalo más tarde.</p>";
+    }
+    exit;
+});
+
 // Registrar visita automáticamente (solo para páginas públicas)
 try {
     if (class_exists('VisitTracker')) {

@@ -6,10 +6,25 @@ function redirect($url) {
 }
 
 // Send a notification to admin via FormSubmit
-function sendFormSubmitNotification($subject, $message, $name = 'Notificación', $fromEmail = 'no-reply@filamariscales.es', $extraFields = []) {
+function sendFormSubmitNotification($subject, $message, $name = null, $fromEmail = null, $extraFields = []) {
     if (!defined('FORMSUBMIT_TO')) {
         error_log('FORMSUBMIT_TO is not defined. Cannot send FormSubmit notification.');
         return false;
+    }
+
+    // Defaults from config
+    if ($name === null && defined('FORMSUBMIT_FROM_NAME')) {
+        $name = FORMSUBMIT_FROM_NAME;
+    } elseif ($name === null) {
+        $name = 'Notificación';
+    }
+    if ($fromEmail === null && defined('FORMSUBMIT_FROM_EMAIL')) {
+        $fromEmail = FORMSUBMIT_FROM_EMAIL;
+    } elseif ($fromEmail === null) {
+        $fromEmail = 'no-reply@filamariscales.es';
+    }
+    if (defined('FORMSUBMIT_SUBJECT_PREFIX')) {
+        $subject = FORMSUBMIT_SUBJECT_PREFIX . $subject;
     }
 
     $payload = array_merge([
